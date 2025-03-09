@@ -6,7 +6,8 @@ The programming languages for which there are samples are written in brackets in
 # Development Accounting
 Replicating a simplified version of Caselli's (2004) "Accounting for Cross-Country Income Differences" paper. The code:
 - Puts together the production function & estimates residual TFP
-- Estimates the "Measure of Our Ignorance", both across all countries and countries at different percentiles, using log-variance decomposition 
+- Estimates the "Measure of Our Ignorance", both across all countries and countries at different percentiles, using log-variance decomposition
+- Generates scatter plots
 
 Completed in Undergraduate Year 1
 
