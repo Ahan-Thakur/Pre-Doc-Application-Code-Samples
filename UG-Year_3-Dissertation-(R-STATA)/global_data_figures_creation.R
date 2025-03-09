@@ -1,16 +1,12 @@
 library(ggplot2)
 
-# Define output directory
 output_dir <- "C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/unified_dataset/global_data_figures"
-
-# Ensure output directory exists
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
 ###--------------------------------------------------------------------------###
 ### CREATING SCATTER PLOTS OF PANEL DATA ###
 ###--------------------------------------------------------------------------###
 
-# Function to create and save scatter plots
 create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, file_name) {
   p <- ggplot(data, aes_string(x = x_var, y = y_var, color = "countrycode")) +
     geom_point(shape = 4, size = 1) +  # Smaller x markers
@@ -21,7 +17,6 @@ create_scatter_plot <- function(data, x_var, y_var, x_label, y_label, file_name)
   ggsave(filename = file.path(output_dir, paste0(file_name, ".png")), plot = p, width = 8, height = 6, dpi = 300)
 }
 
-# Generate the requested scatter plots
 create_scatter_plot(global_data, "ln_manual_TFP", "institutions", "Log TFP", "Institutions", "ln_TFP_vs_institutions")
 create_scatter_plot(global_data, "ln_human_capital", "institutions", "Log Human Capital", "Institutions", "ln_human_capital_vs_institutions")
 create_scatter_plot(global_data, "ln_capital_per_capita", "institutions", "Log Capital per capita", "Institutions", "ln_capital_per_capita_vs_institutions")
