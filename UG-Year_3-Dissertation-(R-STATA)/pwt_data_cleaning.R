@@ -1,10 +1,9 @@
-# Load required libraries
 library(dplyr)
 
-# Load the RData file
 load("C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/pwt_data/pwt_data_raw.RData")
 
-# Select relevant columns
+output_dir <- "C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/pwt_data"
+
 selected_vars <- c("countrycode", "country", "year", "cgdpo", "pop", "hc", "ctfp", "cwtfp", "cn", "delta", "labsh", "rtfpna", "rwtfpna")
 pwt_data_clean <- data[selected_vars]
 
@@ -22,10 +21,6 @@ pwt_data_clean$capital_per_capita <- pwt_data_clean$cn / pwt_data_clean$pop
 required_vars <- c("cgdpo", "pop", "hc", "ctfp", "cwtfp")
 pwt_data_clean <- pwt_data_clean[complete.cases(pwt_data_clean[, required_vars]), ]
 
-# Define output directory
-output_dir <- "C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/pwt_data"
-
-# Save the cleaned data as an RData file
 save(pwt_data_clean, file = file.path(output_dir, "pwt_data_clean.RData"))
 
 # Print message confirming successful processing
