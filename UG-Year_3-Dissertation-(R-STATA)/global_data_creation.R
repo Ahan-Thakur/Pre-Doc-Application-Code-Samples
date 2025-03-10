@@ -1,15 +1,11 @@
-# Load required libraries
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 
-# Load the first dataset
-load("C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/pwt_data/pwt_data_clean.RData")
 
-# Load the second dataset
+load("C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/pwt_data/pwt_data_clean.RData")
 load("C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/vdem_data/vdem_data_clean.RData")
 
-# Merge the datasets by 'country' and 'year'
 global_data <- full_join(pwt_data_clean, vdem_data_clean, by = c("countrycode", "year"))
 
 # Create TFP variable manually 
