@@ -64,3 +64,23 @@ xtabond2 D.ln_capital_per_capita ///
          gmm(L.D.ln_capital_per_capita, lag(2 3) collapse) /// 
          gmm(L.D.ln_capital_per_capita institutions_L5_8_avg, lag(2 3) equation(level) collapse) ///
          robust twostep
+
+**Average Lag 9-12 of institutions, 1 lag of capital 
+
+xtabond2 D.ln_capital_per_capita ///
+         institutions_L9_12_avg ///
+         L(1).D.ln_capital_per_capita, ///
+         gmm(institutions_L9_12_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_capital_per_capita, lag(2 3) collapse) /// 
+         gmm(L.D.ln_capital_per_capita institutions_L9_12_avg, lag(2 3) equation(level) collapse) ///
+         robust twostep
+		 
+**Average Lag 13-16 of institutions, 1 lag of capital 
+		 
+xtabond2 D.ln_capital_per_capita ///
+         institutions_L13_16_avg ///
+         L(1).D.ln_capital_per_capita, ///
+         gmm(institutions_L13_16_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_capital_per_capita, lag(2 3) collapse) /// 
+         gmm(L.D.ln_capital_per_capita institutions_L13_16_avg, lag(2 3) equation(level) collapse) ///
+         robust twostep
