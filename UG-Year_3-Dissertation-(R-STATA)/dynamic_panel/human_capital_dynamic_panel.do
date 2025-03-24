@@ -1,4 +1,4 @@
-clear all
+
 set matsize 5000
 set more off
 
@@ -11,27 +11,7 @@ cap ssc install xtdpdgmm
 
 global project "C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code"
 
-import delimited "C:/Ahan/Ahan/University 3rd Year/Dissertation/Dissertation Code/unified_dataset/global_data.csv"
 
-encode countrycode, gen(ncountrycode)
-
-xtset ncountrycode year
-
-* Generate lagged variables explicitly
-forvalues i = 1/25 {
-    gen institutions_L`i' = L`i'.institutions
-}
-
-* Calculate the average of the 4 lags
-egen institutions_L1_4_avg = rowmean(institutions_L1 institutions_L2 institutions_L3 institutions_L4)
-egen institutions_L5_8_avg = rowmean(institutions_L5 institutions_L6 institutions_L7 institutions_L8)
-egen institutions_L9_12_avg = rowmean(institutions_L9 institutions_L10 institutions_L11 institutions_L12)
-egen institutions_L13_16_avg = rowmean(institutions_L13 institutions_L14 institutions_L15 institutions_L16)
-egen institutions_L17_20_avg = rowmean(institutions_L17 institutions_L18 institutions_L19 institutions_L20)
-
-gen D_institutions_1_4_vs_5_8_avg = institutions_L1_4_avg - institutions_L5_8_avg
-
-*Panel is not strongly balanced so we use System GMM*
 
 
 *******************************************************
@@ -42,10 +22,10 @@ gen D_institutions_1_4_vs_5_8_avg = institutions_L1_4_avg - institutions_L5_8_av
 
 
 *************************************************************
-*** Growth of ln_capital_per_capita, Level of Institutions ***
+*** Growth of ln_human_capital, Level of Institutions ***
 *************************************************************
 
-**Average Lag 1-4 of institutions, 1 lag of capital
+**Average Lag 1-4 of institutions, 1 lag of human capital
 
 xtabond2 D.ln_human_capital ///
          institutions_L1_4_avg ///
@@ -55,7 +35,7 @@ xtabond2 D.ln_human_capital ///
          gmm(L.D.ln_human_capital institutions_L1_4_avg, lag(2 3) equation(level) collapse) ///
          robust twostep
 
-**Average Lag 5-8 of institutions, 1 lag of capital
+**Average Lag 5-8 of institutions, 1 lag of human capital
 
 xtabond2 D.ln_human_capital ///
          institutions_L5_8_avg ///
@@ -65,3 +45,153 @@ xtabond2 D.ln_human_capital ///
          gmm(L.D.ln_human_capital institutions_L5_8_avg, lag(2 3) equation(level) collapse) ///
          robust twostep
 		 
+
+**Average Lag 9-12 of institutions, 1 lag of human capital
+		 
+xtabond2 D.ln_human_capital ///
+         institutions_L9_12_avg ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L9_12_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) /// 
+         gmm(L.D.ln_human_capital institutions_L9_12_avg, lag(2 3) equation(level) collapse) ///
+         robust twostep
+		 
+**Average Lag 12-16 of institutions, 1 lag of human capital 
+		 
+xtabond2 D.ln_human_capital ///
+         institutions_L13_16_avg ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L13_16_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) /// 
+         gmm(L.D.ln_human_capital institutions_L13_16_avg, lag(2 3) equation(level) collapse) ///
+         robust twostep
+
+
+		 
+		 
+		 
+****************************************************************************
+*** Growth of ln_human_capital, Level of Institutions, Joint Regression ***
+****************************************************************************
+*iv(year) does not pass Hansen test, need to absorb years
+
+		 
+tabulate year, generate(year_dummy)
+ds year_dummy*
+local yeardummies `r(varlist)'
+
+xtabond2 D.ln_human_capital ///
+         institutions_L1_4_avg ///
+         institutions_L5_8_avg ///
+         institutions_L9_12_avg ///
+         institutions_L13_16_avg ///
+         institutions_L17_20_avg ///
+		 `yeardummies' ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L1_4_avg institutions_L5_8_avg institutions_L9_12_avg ///
+             institutions_L13_16_avg institutions_L17_20_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital institutions_L1_4_avg institutions_L5_8_avg ///
+             institutions_L9_12_avg institutions_L13_16_avg institutions_L17_20_avg, ///
+             lag(2 3) equation(level) collapse) ///
+         robust twostep
+		 
+
+
+*Alpha = 0: Ridge 		 
+cvlasso D.ln_human_capital ///
+    institutions_L1_4_avg institutions_L5_8_avg institutions_L9_12_avg ///
+    institutions_L13_16_avg institutions_L17_20_avg ///
+    L.ln_human_capital ///
+    i.year, ///
+    alpha(0) ///
+    lopt ///
+    seed(123)
+	
+*Diagnostics: negative coefficient on institutions_L1_4_avg
+cvlasso D.ln_human_capital institutions_L1_4_avg L.ln_human_capital i.year, alpha(0) lopt
+
+
+*Alpha = 0.5: Elastic net 
+cvlasso D.ln_human_capital ///
+    institutions_L1_4_avg institutions_L5_8_avg institutions_L9_12_avg ///
+    institutions_L13_16_avg institutions_L17_20_avg ///
+    L.ln_human_capital ///
+    i.year, ///
+    alpha(0.5) ///
+    lopt ///
+    seed(123)
+	
+
+*Alpha = 1: Lasso
+cvlasso D.ln_human_capital ///
+    institutions_L1_4_avg institutions_L5_8_avg institutions_L9_12_avg ///
+    institutions_L13_16_avg institutions_L17_20_avg ///
+    L.ln_human_capital ///
+    i.year, ///
+    alpha(1) ///
+    seed(123)
+		 
+		 
+		 
+		 
+		 
+
+******************************************************************************************************
+******************************************************************************************************
+******************************************************************************************************
+*** Including iv(time) [results in instrument proliferation / severely weakened Hansen tests]
+******************************************************************************************************
+******************************************************************************************************
+******************************************************************************************************
+
+
+**Average Lag 1-4 of institutions, 1 lag of human capital, with iv(year)
+
+xtabond2 D.ln_human_capital ///
+         institutions_L1_4_avg ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L1_4_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) /// 
+         gmm(L.D.ln_human_capital institutions_L1_4_avg, lag(2 3) equation(level)) ///
+		 iv(year) ///
+         robust twostep
+		 
+		 
+
+**Average Lag 5-8 of institutions, 1 lag of human capital, with iv(year)
+
+xtabond2 D.ln_human_capital ///
+         institutions_L5_8_avg ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L5_8_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) /// 
+         gmm(L.D.ln_human_capital institutions_L5_8_avg, lag(2 3) equation(level)) ///
+		 iv(year) ///
+         robust twostep
+		 
+		 
+
+**Average Lag 9-12 of institutions, 1 lag of human capital, with iv(year)
+		 
+xtabond2 D.ln_human_capital ///
+         institutions_L9_12_avg ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L9_12_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) /// 
+         gmm(L.D.ln_human_capital institutions_L9_12_avg, lag(2 3) equation(level)) ///
+		 iv(year) ///
+         robust twostep
+		 
+		 
+		 
+**Average Lag 12-16 of institutions, 1 lag of human capital, with iv(year)
+		 
+xtabond2 D.ln_human_capital ///
+         institutions_L13_16_avg ///
+         L(1).D.ln_human_capital, ///
+         gmm(institutions_L13_16_avg, lag(2 3) collapse) ///
+         gmm(L.D.ln_human_capital, lag(2 3) collapse) /// 
+         gmm(L.D.ln_human_capital institutions_L13_16_avg, lag(2 3) equation(level)) ///
+		 iv(year) ///
+         robust twostep
