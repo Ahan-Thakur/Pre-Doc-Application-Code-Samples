@@ -28,8 +28,11 @@ Completed in Undergraduate Year 2
 Estimating the causal effect of institutional change on the proximate causes of growth. (WIP) The code:
 - Cleans V-Dem, PWT and state capacity datasets & merges them
 - Puts together the production function & estimates residual TFP
-- Generates plots of the time series for various countries 
-- Runs dynamic panel models for combinations of levels and changes in capital per capita, human capital, TFP on institutions, state capacity and a weighted average of both
-- Runs these dynamic panel models for countries in different income bands, different regions 
+- Generates plots of the time series for various countries
+- Generates bins of average level of institutions (capture political freedoms) and state capacity across 4 year bands 
+- Runs dynamic panel models for combinations of levels and changes in capital per capita, human capital and TFP on past bins institutions, state capacity and a weighted average of both
+- Runs these dynamic panel models for countries in different income bands, different regions
+- Dynamic panel models use Blundell & Bond (system-GMM) estimators; endogenous variables instrumented with their lags
+- All coefficients re-estimated using ridge regressions (LASSO with alpha = 0) to assess impact of multicollinearity 
 
 Work in Progress 
