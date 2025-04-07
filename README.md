@@ -29,6 +29,7 @@ Estimating the causal effect of institutional change on the proximate causes of 
 - Cleans the V-Dem and PWT datasets & merges them
 - Puts together the production function & estimates residual TFP
 - Generates plots of the time series for various countries 
-- Runs a simple DiD regression of institutional change on log capital per capita 
+- Runs dynamic panel models for combinations of levels and changes in capital per capita, human capital, TFP on institutions, state capacity and a weighted average of both
+- Runs these dynamic panel models for countries in different income bands, different regions 
 
 Work in Progress 
