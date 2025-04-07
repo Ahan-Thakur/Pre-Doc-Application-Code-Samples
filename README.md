@@ -26,7 +26,7 @@ Completed in Undergraduate Year 2
 
 # UG Year-3 Dissertation
 Estimating the causal effect of institutional change on the proximate causes of growth. (WIP) The code:
-- Cleans the V-Dem and PWT datasets & merges them
+- Cleans V-Dem, PWT and state capacity datasets & merges them
 - Puts together the production function & estimates residual TFP
 - Generates plots of the time series for various countries 
 - Runs dynamic panel models for combinations of levels and changes in capital per capita, human capital, TFP on institutions, state capacity and a weighted average of both
